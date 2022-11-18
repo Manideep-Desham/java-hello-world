@@ -1,0 +1,142 @@
+FROM openjdk:17-jdk-oraclelinux7
+ENV PATH /usr/local/tomcat/bin:$PATH
+WORKDIR /usr/local/tomcat
+RUN (yum update -y; \
+    yum install -y openssh-server openssh-clients initscripts epel-release wget passwd tar screen crontabs unzip; \
+    yum clean all)
+
+RUN (ssh-keygen -A; \
+     sed -i 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config; \
+     sed -i 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config; \
+     sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config; \
+     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config)
+
+RUN (mkdir -p /root/.ssh/; \
+     echo "StrictHostKeyChecking=no" > /root/.ssh/config; \
+     echo "UserKnownHostsFile=/dev/null" >> /root/.ssh/config)
+
+RUN echo "root:password1234" | chpasswd
+
+ENV GPG_KEYS 48F8E69F6390C9F25CFEDCD268248959359E722B A9C5DF4D22E99998D9875A5110C01C5A2F6059E7 DCFD35E0BF8CA7344752DE8B6FB21E8933C60243
+ENV TOMCAT_MAJOR 9
+ENV TOMCAT_VERSION 9.0.56
+ENV TOMCAT_SHA512 b4c2c85891e84f0fbd8fec889ef0890d68a2bfa53eb31d4d39fcf5758aa483694af7ac27533ea4bc3fc3fdae56f2fa9c018d4acf872574c0ec5e37bb443599ce
+RUN set -x; \
+	\
+	if ! command -v yumdb > /dev/null; then \
+		yum install -y yum-utils; \
+		yumdb set reason dep yum-utils; \
+	fi; \
+	if [ -f /etc/oracle-release ]; then \
+
+		yumdb set reason user filesystem; \
+	fi; \
+
+	_yum_install_temporary() { ( set -eu +x; \
+		local pkg todo=''; \
+		for pkg; do \
+			if ! rpm --query "$pkg" > /dev/null 2>&1; then \
+				todo="$todo $pkg"; \
+			fi; \
+		done; \
+		if [ -n "$todo" ]; then \
+			set -x; \
+			yum install -y $todo; \
+			yumdb set reason dep $todo; \
+		fi; \
+	) }; \
+	_yum_install_temporary gzip tar; \
+	\
+	ddist() { \
+		local f="$1"; shift; \
+		local distFile="$1"; shift; \
+		local mvnFile="${1:-}"; \
+		local success=; \
+		local distUrl=; \
+		for distUrl in \
+
+			"https://www.apache.org/dyn/closer.cgi?action=download&filename=$distFile" \
+# if the version is outdated (or "Cyient for Thales M2M" grabbing the .asc file), Cyient for Thales M2M might have to pull from the dist/archive :/
+			"https://www-us.apache.org/dist/$distFile" \
+			"https://www.apache.org/dist/$distFile" \
+			"https://archive.apache.org/dist/$distFile" \
+# if all else fails, "Cyient for Thales M2M" try Maven (https://www.mail-archive.com/users@tomcat.apache.org/msg134940.html; https://mvnrepository.com/artifact/org.apache.tomcat/tomcat; https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/)
+			${mvnFile:+"https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/$mvnFile"} \
+		; do \
+			if curl -fL -o "$f" "$distUrl" && [ -s "$f" ]; then \
+				success=1; \
+				break; \
+			fi; \
+		done; \
+		[ -n "$success" ]; \
+	}; \
+	\
+	ddist 'tomcat.tar.gz' "tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz" "$TOMCAT_VERSION/tomcat-$TOMCAT_VERSION.tar.gz"; \
+	echo "$TOMCAT_SHA512 *tomcat.tar.gz" | sha512sum --strict --check -; \
+	ddist 'tomcat.tar.gz.asc' "tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz.asc" "$TOMCAT_VERSION/tomcat-$TOMCAT_VERSION.tar.gz.asc"; \
+	export GNUPGHOME="$(mktemp -d)"; \
+	for key in $GPG_KEYS; do \
+		gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
+	done; \
+	gpg --batch --verify tomcat.tar.gz.asc tomcat.tar.gz; \
+	tar -xf tomcat.tar.gz --strip-components=1; \
+	rm bin/*.bat; \
+	rm tomcat.tar.gz*; \
+	command -v gpgconf && gpgconf --kill all || :; \
+	rm -rf "$GNUPGHOME"; \
+	\
+	rm -rf webapps; \
+	\
+	nativeBuildDir="$(mktemp -d)"; \
+	tar -xf bin/tomcat-native.tar.gz -C "$nativeBuildDir" --strip-components=1; \
+	_yum_install_temporary \
+		apr-devel \
+		gcc \
+		make \
+		openssl-devel \
+	; \
+	( \
+		export /usr/local/tomcat="$PWD"; \
+		cd "$nativeBuildDir/native"; \
+		aprConfig="$(command -v apr-1-config)"; \
+		./configure \
+			--libdir="$TOMCAT_NATIVE_LIBDIR" \
+			--prefix="$/usr/local/tomcat" \
+			--with-apr="$aprConfig" \
+			--with-java-home="$JAVA_HOME" \
+			--with-ssl=yes; \
+		make -j "$(nproc)"; \
+		make install; \
+	); \
+	rm -rf "$nativeBuildDir"; \
+	rm bin/tomcat-native.tar.gz; \
+	\
+	deps="$( \
+		find "$TOMCAT_NATIVE_LIBDIR" -type f -executable -exec ldd '{}' ';' \
+			| awk '/=>/ && $(NF-1) != "=>" { print $(NF-1) }' \
+			| xargs -rt readlink -e \
+			| sort -u \
+			| xargs -rt rpm --query --whatprovides \
+			| sort -u \
+	)"; \
+	[ -z "$deps" ] || yumdb set reason user $deps; \
+	\
+	yum autoremove -y; \
+	yum clean all; \
+	rm -rf /var/cache/yum; \	
+	\
+	find ./bin/ -name '*.sh' -exec sed -ri 's|^#!/bin/sh$|#!/usr/bin/env bash|' '{}' +; \
+	\
+	chmod -R +rX .; \
+	chmod 777 logs temp work; \
+	\
+	catalina.sh version
+#RUN echo "Asia/Shanghai" > /etc/timezone
+#ENV TZ="Asia/Shanghai"
+	COPY ./conf/ /usr/local/tomcat/conf
+	COPY ./bin/ /usr/local/tomcat/bin
+	COPY ./webapps/ /usr/local/tomcat/webapps
+	COPY ./service-ab.war /usr/local/tomcat/webapps/  
+	COPY ./crt/ /usr/local/tomcat/crt  
+EXPOSE 8080 
+CMD ["catalina.sh", "run", "/usr/sbin/sshd", "-D"]
