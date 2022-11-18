@@ -9,6 +9,7 @@ steps:
       echo "First Value" > /workspace/first.txt &&
       # Save another
       expr 1 + 1 > /workspace/second.txt
+      tree
 # In the next step, everything in the environment is discarded
 # EXCEPT items in "/workspace"
 - id: "Read Values"
