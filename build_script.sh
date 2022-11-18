@@ -13,4 +13,6 @@ cp -a ./target/web-services.war /workspace/img-c.war
 
 cd ../springboot-cont-d
 mvn clean compile install
-cp -a ./target\web-services.war /workspace/img-d.war
+cp -a ./target/web-services.war /workspace/img-d.war
+
+cd ../

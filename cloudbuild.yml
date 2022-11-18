@@ -9,7 +9,11 @@ steps:
       echo Hello
       chmod +x build_script.sh
       ./build_script.sh
+      echo *************root**********************
       ls
+      echo *************springboot-cont-a folder**********************
       ls ./springboot-cont-a
+      echo *************springboot-cont-a/target folder**********************
       ls ./springboot-cont-a/target
+      echo *************workspace folder**********************
       ls /workspace
