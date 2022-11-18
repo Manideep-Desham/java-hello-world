@@ -1,0 +1,15 @@
+steps:
+- id: "Build WAR files using Maven"
+  name: maven
+  entrypoint: /bin/bash
+  args:
+    - -c
+    - |
+      # Going to workspace where code is present
+      echo Hello
+      chmod +x build_script.sh
+      ./build_script.sh
+      ls
+      ls ./springboot-cont-a
+      ls ./springboot-cont-a/target
+      ls /workspace
