@@ -17,3 +17,7 @@ steps:
       ls ./springboot-cont-a/target
       echo *************workspace folder**********************
       ls /workspace
+artifacts:
+  objects:
+    location: 'gs://war-file-bucket/$PROJECT_ID'
+    paths: ['/workspace/*.war']
