@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>  
+<rootElement>  
+    <cbcDetails>           
+        <hospitalID>11</hospitalID>  
+        <cbcDate>2021-07-22 23:59:59</cbcDate>
+        <encryptionKey>1e528UvtZ5kWZctufAT08fvNaWKZARl/lUELMmu19Ac=</encryptionKey>
+    </cbcDetails>	
+	
+    <environment>QA</environment>
+</rootElement>
+

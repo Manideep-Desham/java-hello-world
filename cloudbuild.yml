@@ -12,14 +12,39 @@ steps:
       echo *************root**********************
       ls
       echo *************springboot-cont-a folder**********************
-      ls ./springboot-cont-a
+      ls ../springboot-cont-a
       echo *************springboot-cont-a/target folder**********************
-      ls ./springboot-cont-a/target
+      ls ../springboot-cont-a/target
       echo *************workspace folder**********************
       ls /workspace
-artifacts:
-  objects:
-    location: 'gs://war-file-bucket/$PROJECT_ID'
-    paths: ['/workspace/*.war']
+- id: "Building docker image for container a"
+  name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t',
+          'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1',
+          '-f', 'DockerfileContA', '.' ]
+- id: "Building docker image for container b"
+  name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t',
+          'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1',
+          '-f', 'DockerfileContB', '.' ]
+- id: "Building docker image for container c"
+  name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t',
+          'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-c:v1',
+          '-f', 'DockerfileContC', '.' ]
+- id: "Building docker image for container d"
+  name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t',
+          'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-d:v1',
+          '-f', 'DockerfileContD', '.' ]
+images:
+- 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1'
+- 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1'
+- 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-c:v1'
+- 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-d:v1'
+# artifacts:
+#   objects:
+#     location: 'gs://war-file-bucket/$PROJECT_ID'
+#     paths: ['/workspace/*.war']
 options:
   logging: CLOUD_LOGGING_ONLY
