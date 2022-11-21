@@ -21,3 +21,5 @@ artifacts:
   objects:
     location: 'gs://war-file-bucket/$PROJECT_ID'
     paths: ['/workspace/*.war']
+options:
+  logging: CLOUD_LOGGING_ONLY
