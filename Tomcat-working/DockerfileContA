@@ -1,7 +1,6 @@
 FROM openjdk:17-jdk-oraclelinux7
 ENV PATH /usr/local/tomcat/bin:$PATH
 WORKDIR /usr/local/tomcat
-COPY ../springboot-cont-a/target/web-services.war /usr/local/tomcat/webapps/
 RUN (yum update -y; \
     yum install -y openssh-server openssh-clients initscripts epel-release wget passwd tar screen crontabs unzip; \
     yum clean all)
@@ -137,7 +136,7 @@ RUN set -x; \
 	COPY ./conf/ /usr/local/tomcat/conf
 	COPY ./bin/ /usr/local/tomcat/bin
 	COPY ./webapps/ /usr/local/tomcat/webapps  
-	COPY ../springboot-cont-a/target/web-services.war /usr/local/tomcat/webapps/
+	COPY ./img-a.war /usr/local/tomcat/webapps/
 	COPY ./crt/ /usr/local/tomcat/crt  
 EXPOSE 8080 
 CMD ["catalina.sh", "run", "/usr/sbin/sshd", "-D"]
