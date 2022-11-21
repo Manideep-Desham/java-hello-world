@@ -136,7 +136,7 @@ RUN set -x; \
 	COPY ./conf/ /usr/local/tomcat/conf
 	COPY ./bin/ /usr/local/tomcat/bin
 	COPY ./webapps/ /usr/local/tomcat/webapps
-	COPY ./service-ab.war /usr/local/tomcat/webapps/  
+	COPY /workspace/springboot-cont-b/target/web-services.war /usr/local/tomcat/webapps/ 
 	COPY ./crt/ /usr/local/tomcat/crt  
 EXPOSE 8080 
 CMD ["catalina.sh", "run", "/usr/sbin/sshd", "-D"]

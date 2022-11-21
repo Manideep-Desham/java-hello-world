@@ -21,22 +21,22 @@ steps:
   name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t',
           'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1',
-          '-f', 'DockerfileContA', '.' ]
+          '-f', '/workspace/Tomcat-working/DockerfileContA', '/workspace/Tomcat-working/' ]
 - id: "Building docker image for container b"
   name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t',
           'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1',
-          '-f', 'DockerfileContB', '.' ]
+          '-f', '/workspace/Tomcat-working/DockerfileContB', '/workspace/Tomcat-working/' ]
 - id: "Building docker image for container c"
   name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t',
           'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-c:v1',
-          '-f', 'DockerfileContC', '.' ]
+          '-f', '/workspace/Tomcat-working/DockerfileContC', '/workspace/Tomcat-working/' ]
 - id: "Building docker image for container d"
   name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t',
           'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-d:v1',
-          '-f', 'DockerfileContD', '.' ]
+          '-f', '/workspace/Tomcat-working/DockerfileContD', '/workspace/Tomcat-working/' ]
 images:
 - 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1'
 - 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1'
