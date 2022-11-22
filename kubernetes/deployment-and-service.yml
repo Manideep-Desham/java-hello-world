@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: cont-a
-        image: s-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1
+        image: us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1
         ports:
         - containerPort: 8080
 ---
@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: cont-b
-        image: s-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1
+        image: us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1
         ports:
         - containerPort: 8080
       
@@ -78,7 +78,7 @@ spec:
     spec:
       containers:
       - name: cont-c
-        image: s-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-c:v1
+        image: us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-c:v1
         ports:
         - containerPort: 8080
 ---
@@ -100,7 +100,7 @@ spec:
     spec:
       containers:
       - name: cont-d
-        image: s-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-d:v1
+        image: us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-d:v1
         ports:
         - containerPort: 8080
       

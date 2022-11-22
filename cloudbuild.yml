@@ -20,28 +20,28 @@ steps:
 - id: "Building docker image for container a"
   name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t',
-          'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1',
+          'gcr.io/project-for-tf-cicd-kube/cont-a:v1',
           '-f', '/workspace/Tomcat-working/DockerfileContA', '/workspace/Tomcat-working/' ]
 - id: "Building docker image for container b"
   name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t',
-          'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1',
+          'gcr.io/project-for-tf-cicd-kube/cont-b:v1',
           '-f', '/workspace/Tomcat-working/DockerfileContB', '/workspace/Tomcat-working/' ]
 - id: "Building docker image for container c"
   name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t',
-          'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-c:v1',
+          'gcr.io/project-for-tf-cicd-kube/cont-c:v1',
           '-f', '/workspace/Tomcat-working/DockerfileContC', '/workspace/Tomcat-working/' ]
 - id: "Building docker image for container d"
   name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t',
-          'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-d:v1',
+          'gcr.io/project-for-tf-cicd-kube/cont-d:v1',
           '-f', '/workspace/Tomcat-working/DockerfileContD', '/workspace/Tomcat-working/' ]
 images:
-- 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1'
-- 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1'
-- 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-c:v1'
-- 'us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-d:v1'
+- 'gcr.io/project-for-tf-cicd-kube/cont-a:v1'
+- 'gcr.io/project-for-tf-cicd-kube/cont-b:v1'
+- 'gcr.io/project-for-tf-cicd-kube/cont-c:v1'
+- 'gcr.io/project-for-tf-cicd-kube/cont-d:v1'
 # artifacts:
 #   objects:
 #     location: 'gs://war-file-bucket/$PROJECT_ID'
