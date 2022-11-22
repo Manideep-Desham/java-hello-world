@@ -1,30 +1,30 @@
 cd springboot-cont-a
 call mvn clean compile install
-copy /Y .\target\web-services.war ..\Tomcat-working\service-ab.war   
+copy /Y .\target\web-services.war ..\Tomcat-working\img-a.war  
 cd ..\Tomcat-working
-docker build -t sabari_task/cont-a:v1 -f DockerfileContA .              
+docker build -t gcr.io/project-for-tf-cicd-kube/cont-a:v1 -f DockerfileContA .              
 
 cd ..\springboot-cont-b
 call mvn clean compile install
-copy /Y .\target\web-services.war ..\Tomcat-working\service-ab.war
+copy /Y .\target\web-services.war ..\Tomcat-working\img-b.war
 cd ..\Tomcat-working
-docker build -t sabari_task/cont-b:v1 -f DockerfileContB . 
+docker build -t gcr.io/project-for-tf-cicd-kube/cont-b:v1 -f DockerfileContB . 
 
 cd ..\springboot-cont-c
 call mvn clean compile install
-copy /Y .\target\web-services.war ..\Tomcat-working\service-cd.war
+copy /Y .\target\web-services.war ..\Tomcat-working\img-c.war
 cd ..\Tomcat-working
-docker build -t sabari_task/cont-c:v1 -f DockerfileContC .
+docker build -t gcr.io/project-for-tf-cicd-kube/cont-c:v1 -f DockerfileContC .
  
 
 cd ..\springboot-cont-d
 call mvn clean compile install
-copy /Y .\target\web-services.war ..\Tomcat-working\service-cd.war 
+copy /Y .\target\web-services.war ..\Tomcat-working\img-d.war
 cd ..\Tomcat-working
-docker build -t sabari_task/cont-d:v1 -f DockerfileContD .
+docker build -t gcr.io/project-for-tf-cicd-kube/cont-d:v1 -f DockerfileContD .
 
 
-cd ..\kubernetes
+:: cd ..\kubernetes
 :: kubectl create namespace dev
 kubectl delete -f deployment-and-service.yml
 kubectl apply -f deployment-and-service.yml

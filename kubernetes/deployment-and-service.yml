@@ -7,7 +7,7 @@ metadata:
   name: cont-a
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: cont-ab
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: cont-a
-        image: us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1
+        image: gcr.io/project-for-tf-cicd-kube/cont-a:v1
         ports:
         - containerPort: 8080
 ---
@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: cont-b
-        image: us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1
+        image: gcr.io/project-for-tf-cicd-kube/cont-b:v1
         ports:
         - containerPort: 8080
       
@@ -78,7 +78,7 @@ spec:
     spec:
       containers:
       - name: cont-c
-        image: us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-c:v1
+        image: gcr.io/project-for-tf-cicd-kube/cont-c:v1
         ports:
         - containerPort: 8080
 ---
@@ -100,7 +100,7 @@ spec:
     spec:
       containers:
       - name: cont-d
-        image: us-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-d:v1
+        image: gcr.io/project-for-tf-cicd-kube/cont-d:v1
         ports:
         - containerPort: 8080
       

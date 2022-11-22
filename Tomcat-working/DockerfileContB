@@ -138,5 +138,6 @@ RUN set -x; \
 	COPY ./webapps/ /usr/local/tomcat/webapps
 	COPY ./img-b.war /usr/local/tomcat/webapps/service-ab.war
 	COPY ./crt/ /usr/local/tomcat/crt  
+RUN chmod +x bin/catalina.sh
 EXPOSE 8080 
 CMD ["catalina.sh", "run", "/usr/sbin/sshd", "-D"]
