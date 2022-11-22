@@ -1,0 +1,26 @@
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: abcd-ingress
+  namespace: default
+spec:
+  rules:
+  - host: manideep-reddy.shop
+    http:
+      paths:
+      - path: /service-ab/*
+        pathType: "ImplementationSpecific"
+        backend:
+          service:
+            name: service-ab
+            port:
+              number: 80
+      - path: /service-cd/*
+        pathType: "ImplementationSpecific"
+        backend:
+          service:
+            name: service-cd
+            port:
+              number: 80

@@ -136,7 +136,7 @@ RUN set -x; \
 	COPY ./conf/ /usr/local/tomcat/conf
 	COPY ./bin/ /usr/local/tomcat/bin
 	COPY ./webapps/ /usr/local/tomcat/webapps  
-	COPY ./img-c.war /usr/local/tomcat/webapps/
+	COPY ./img-c.war /usr/local/tomcat/webapps/service-cd.war
 	COPY ./crt/ /usr/local/tomcat/crt  
 EXPOSE 8080 
 CMD ["catalina.sh", "run", "/usr/sbin/sshd", "-D"]

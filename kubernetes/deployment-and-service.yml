@@ -1,0 +1,121 @@
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cont-a
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cont-ab
+  template:
+    metadata:
+      labels:
+        app: cont-ab
+    spec:
+      containers:
+      - name: cont-a
+        image: s-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-a:v1
+        ports:
+        - containerPort: 8080
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cont-b
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cont-ab
+  template:
+    metadata:
+      labels:
+        app: cont-ab
+    spec:
+      containers:
+      - name: cont-b
+        image: s-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-b:v1
+        ports:
+        - containerPort: 8080
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-ab
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: cont-ab
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cont-c
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cont-cd
+  template:
+    metadata:
+      labels:
+        app: cont-cd
+    spec:
+      containers:
+      - name: cont-c
+        image: s-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-c:v1
+        ports:
+        - containerPort: 8080
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cont-d
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cont-cd
+  template:
+    metadata:
+      labels:
+        app: cont-cd
+    spec:
+      containers:
+      - name: cont-d
+        image: s-west1-docker.pkg.dev/project-for-tf-cicd-kube/my-docker-repository/img-d:v1
+        ports:
+        - containerPort: 8080
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-cd
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: cont-cd
