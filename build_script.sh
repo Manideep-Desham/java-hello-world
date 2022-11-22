@@ -15,4 +15,4 @@ cd ../springboot-cont-d
 mvn clean compile install
 cp -a ./target/web-services.war /workspace/Tomcat-working/img-d.war
 
-cd /
+cd ../Tomcat-working
