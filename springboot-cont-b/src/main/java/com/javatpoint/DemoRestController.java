@@ -7,6 +7,6 @@ public class DemoRestController
 	@GetMapping("/hello")  
 	public String hello()   
 	{  
-		return "Hello User, I am responding from container B";  
+		return "Hello User, I am responding from container B..!";  
 	}  
 }

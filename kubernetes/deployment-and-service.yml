@@ -18,7 +18,8 @@ spec:
     spec:
       containers:
       - name: cont-a
-        image: gcr.io/project-for-tf-cicd-kube/cont-a:v1
+        image: gcr.io/project-for-tf-cicd-kube/cont-a:v2
+	imagePullPolicy: Always
         ports:
         - containerPort: 8080
 ---
@@ -40,7 +41,8 @@ spec:
     spec:
       containers:
       - name: cont-b
-        image: gcr.io/project-for-tf-cicd-kube/cont-b:v1
+        image: gcr.io/project-for-tf-cicd-kube/cont-b:v2
+	imagePullPolicy: Always
         ports:
         - containerPort: 8080
       
@@ -78,7 +80,8 @@ spec:
     spec:
       containers:
       - name: cont-c
-        image: gcr.io/project-for-tf-cicd-kube/cont-c:v1
+        image: gcr.io/project-for-tf-cicd-kube/cont-c:v2
+	imagePullPolicy: Always
         ports:
         - containerPort: 8080
 ---
@@ -100,7 +103,8 @@ spec:
     spec:
       containers:
       - name: cont-d
-        image: gcr.io/project-for-tf-cicd-kube/cont-d:v1
+        image: gcr.io/project-for-tf-cicd-kube/cont-d:v2
+	imagePullPolicy: Always
         ports:
         - containerPort: 8080
       
